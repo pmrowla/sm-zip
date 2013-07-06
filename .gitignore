@@ -21,3 +21,5 @@
 *.la
 *.lib
 *.a
+
+smzip_version.h

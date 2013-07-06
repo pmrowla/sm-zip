@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with sm-zip.  If not, see <http://www.gnu.org/licenses/>.
  *
- * vim: set ts=4 et :
+ * vim: set ts=4 et ft=sourcepawn :
  */
 /**
  * @file
- * @brief zm-zip sourcepawn includes
+ * @brief sm-zip sourcepawn includes
  *
  * @author Peter "astroman" Rowlands <peter@pmrowla.com>
  */

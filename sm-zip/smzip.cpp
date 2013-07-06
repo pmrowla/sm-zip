@@ -106,7 +106,7 @@ static cell_t Zip_Open(IPluginContext *pCtx, const cell_t *params)
     char path[PLATFORM_MAX_PATH];
     char *filename;
     pCtx->LocalToString(params[1], &filename);
-    g_pSM->BuildPath(Path_SM, path, sizeof(path), "%s", filename);
+    g_pSM->BuildPath(Path_Game, path, sizeof(path), "%s", filename);
     cell_t append = params[2];
 
     zipFile zf = zipOpen64(path, append);
@@ -138,13 +138,13 @@ static cell_t Zip_AddFile(IPluginContext *pCtx, const cell_t *params)
 
     char path[PLATFORM_MAX_PATH];
     char *filename;
-    pCtx->LocalToString(params[1], &filename);
-    g_pSM->BuildPath(Path_SM, path, sizeof(path), "%s", filename);
+    pCtx->LocalToString(params[2], &filename);
+    g_pSM->BuildPath(Path_Game, path, sizeof(path), "%s", filename);
 
     zip_fileinfo zi;
     memset(&zi, 0, sizeof(zi));
 
-    if (ZIP_OK != zipOpenNewFileInZip64(zf, path, &zi, NULL, 0, NULL, 0, NULL,
+    if (ZIP_OK != zipOpenNewFileInZip64(zf, filename, &zi, NULL, 0, NULL, 0, NULL,
             Z_DEFLATED, Z_DEFAULT_COMPRESSION, isLargeFile(path)))
     {
         return false;

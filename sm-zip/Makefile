@@ -16,7 +16,7 @@ VERSION_HEADER = smzip_version.h
 
 PROJECT = smzip
 
-OBJECTS = sdk/smsdk_ext.cpp smzip.cpp $(MINIZIP)/zip.c $(MINIZIP)/unzip.c
+OBJECTS = sdk/smsdk_ext.cpp smzip.cpp $(MINIZIP)/zip.c $(MINIZIP)/unzip.c $(MINIZIP)/ioapi.c
 
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###
