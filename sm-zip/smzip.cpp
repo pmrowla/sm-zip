@@ -27,6 +27,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #include <zlib.h>
 #include <ioapi.h>
@@ -144,20 +145,24 @@ static cell_t Zip_AddFile(IPluginContext *pCtx, const cell_t *params)
     zip_fileinfo zi;
     memset(&zi, 0, sizeof(zi));
 
-    if (ZIP_OK != zipOpenNewFileInZip64(zf, filename, &zi, NULL, 0, NULL, 0, NULL,
-            Z_DEFLATED, Z_DEFAULT_COMPRESSION, isLargeFile(path)))
+    int zipErr = zipOpenNewFileInZip64(zf, filename, &zi, NULL, 0, NULL, 0, NULL,
+            Z_DEFLATED, Z_DEFAULT_COMPRESSION, isLargeFile(path));
+    if (ZIP_OK != zipErr)
     {
+        g_pSM->LogError(myself, "Could not open new file %s in zip (%d)", filename, err);
         return false;
     }
 
     FILE *fp = fopen64(path, "rb");
     if (NULL == fp)
+    {
+        g_pSM->LogError(myself, "fopen64(%s) failed", path);
         ret = false;
+    }
 
     if (ret)
     {
         char buf[4096];
-        int zipErr;
         size_t bytesRead = 0;
 
         do
@@ -173,10 +178,20 @@ static cell_t Zip_AddFile(IPluginContext *pCtx, const cell_t *params)
             {
                 zipErr = zipWriteInFileInZip(zf, buf, bytesRead);
             }
+
+            if (ZIP_ERRNO == zipErr && EAGAIN == errno)
+                zipErr = ZIP_OK;
+
         } while (ZIP_OK == zipErr && bytesRead > 0);
 
         if (ZIP_OK != zipErr)
+        {
+            if (ZIP_ERRNO == zipErr)
+                g_pSM->LogError(myself, "Failed to write to zip archive (%s)", strerror(errno));
+            else
+                g_pSM->LogError(myself, "Failed to write to zip archive (%d)", zipErr);
             ret = false;
+        }
     }
 
     if (fp)
