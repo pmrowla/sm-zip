@@ -4,7 +4,7 @@
 ### EDIT THESE PATHS FOR YOUR OWN SETUP ###
 ###########################################
 
-SMSDK = ../sourcemod-central
+SMSDK = ../sourcemod-1.5
 ZLIB = ../zlib
 MINIZIP = ../zlib/contrib/minizip
 

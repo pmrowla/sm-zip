@@ -2,6 +2,6 @@
 	path = zlib
     url = https://github.com/madler/zlib
     ignore = dirty
-[submodule "sourcemod-central"]
-	path = sourcemod-central
-	url = https://github.com/pmrowla/sourcemod-central.git
+[submodule "sourcemod-1.5"]
+	path = sourcemod-1.5
+	url = https://github.com/pmrowla/sourcemod-1.5.git
