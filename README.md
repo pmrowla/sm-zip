@@ -22,7 +22,7 @@ Limitations
 License
 -------
 
-sm-zlib is copyright(c) 2013 Peter Rowlands and is distributed under the GNU General Public License version 3.
+sm-zlib is copyright (c) 2013 Peter Rowlands and is distributed under the GNU General Public License version 3.
 See [COPYING.md](https://github.com/pmrowla/sm-zip/blob/master/COPYING.md) for more information.
 
 zlib is copyright (c) 1995-2013 Jean-loup Gailly and Mark Adler and is distributed under the [zlib license](http://www.zlib.net/zlib_license.html).

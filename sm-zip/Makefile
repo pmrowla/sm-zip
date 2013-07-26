@@ -140,7 +140,7 @@ $(ZLIB)/configure.log:
 	cd $(ZLIB) && ./configure --archs="$(ZLIB_ARCH)" --static
 
 $(ZLIB)/libz.a: $(ZLIB)/configure.log
-	cd $(ZLIB) && make
+	cd $(ZLIB) && $(MAKE)
 
 .PHONY: gitversion
 gitversion:
