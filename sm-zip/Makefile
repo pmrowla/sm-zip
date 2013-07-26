@@ -16,8 +16,6 @@ VERSION_HEADER = smzip_version.h
 
 PROJECT = smzip
 
-OBJECTS = sdk/smsdk_ext.cpp smzip.cpp $(MINIZIP)/zip.c $(MINIZIP)/unzip.c $(MINIZIP)/ioapi.c
-
 ##############################################
 ### CONFIGURE ANY OTHER FLAGS/OPTIONS HERE ###
 ##############################################
@@ -28,14 +26,12 @@ C_GCC4_FLAGS = -fvisibility=hidden
 CXX_GCC4_FLAGS = -fvisibility-inlines-hidden
 
 ifndef $(CC)
-	CC = clang
+CC = clang
 endif
 
 ifndef $(CXX)
-	CXX = clang
+CXX = clang++
 endif
-
-CXX_OSX = clang
 
 INCLUDE += -I. -I.. -Isdk -I$(SMSDK)/public -I$(SMSDK)/public/sourcepawn -I$(ZLIB) -I$(MINIZIP)
 
@@ -65,7 +61,6 @@ ifeq "$(USEMETA)" "true"
 endif
 
 ifeq "$(OS)" "Darwin"
-	CXX = $(CXX_OSX)
 	LIB_EXT = dylib
 	CFLAGS += -DOSX -D_OSX
 	LINK += -dynamiclib -lstdc++ -mmacosx-version-min=10.5
@@ -108,7 +103,11 @@ ifeq "$(shell expr $(OS) \= Linux \& $(IS_CLANG) \= 0)" "1"
 	LINK += -static-libgcc
 endif
 
-OBJ_BIN := $(OBJECTS:%.cpp=$(BIN_DIR)/%.o)
+SRC = sdk/smsdk_ext.cpp smzip.cpp
+OBJ := $(SRC:%.cpp=$(BIN_DIR)/%.o)
+
+MINIZIP_SRC = zip.c unzip.c ioapi.c
+MINIZIP_OBJ := $(MINIZIP_SRC:%.c=$(BIN_DIR)/%.o)
 
 # This will break if we include other Makefiles, but is fine for now. It allows
 #  us to make a copy of this file that uses altered paths (ie. Makefile.mine)
@@ -118,13 +117,16 @@ MAKEFILE_NAME := $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 $(BIN_DIR)/%.o: %.cpp $(VERSION_HEADER)
 	$(CXX) $(INCLUDE) $(CFLAGS) $(CXXFLAGS) -o $@ -c $<
 
+$(BIN_DIR)/%.o: $(addprefix $(MINIZIP)/, %.c)
+	$(CC) $(INCLUDE) $(CFLAGS) -o $@ -c $<
+
 all: check extension
 
 check: gitversion
 	mkdir -p $(BIN_DIR)/sdk
 
-extension: check $(ZLIB)/libz.a $(OBJ_BIN)
-	$(CXX) $(INCLUDE) $(OBJ_BIN) $(LINK) -o $(BIN_DIR)/$(BINARY)
+extension: check $(ZLIB)/libz.a $(OBJ) $(MINIZIP_OBJ)
+	$(CXX) $(INCLUDE) $(OBJ) $(MINIZIP_OBJ) $(LINK) -o $(BIN_DIR)/$(BINARY)
 
 debug:
 	$(MAKE) -f $(MAKEFILE_NAME) all DEBUG=true
