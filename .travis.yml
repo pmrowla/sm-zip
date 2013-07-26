@@ -2,22 +2,25 @@
 
 language: cpp
 compiler:
-    - clang
+  - gcc
+  - clang
 
 script: "cd sm-zip && make"
 
 before_install:
-    - git submodule update --init --recursive
+  - git submodule update --init --recursive
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq gcc-multilib g++-multilib
 
 branches:
-    only:
-        - master
+  only:
+    - master
 
 # Use IRC notifications instead of email
 notifications:
-    email: false
-    irc:
-        channels:
-            - "irc.synirc.net#goonpug"
-        on_success: always
-        on_failure: always
+  email: false
+  irc:
+    channels:
+      - "irc.synirc.net#goonpug"
+    on_success: always
+    on_failure: always

@@ -26,8 +26,15 @@ C_OPT_FLAGS = -DNDEBUG -O3 -funroll-loops -pipe -fno-strict-aliasing
 C_DEBUG_FLAGS = -D_DEBUG -DDEBUG -g -ggdb3
 C_GCC4_FLAGS = -fvisibility=hidden
 CXX_GCC4_FLAGS = -fvisibility-inlines-hidden
-CC = clang
-CXX = clang
+
+ifndef $(CC)
+	CC = clang
+endif
+
+ifndef $(CXX)
+	CXX = clang
+endif
+
 CXX_OSX = clang
 
 INCLUDE += -I. -I.. -Isdk -I$(SMSDK)/public -I$(SMSDK)/public/sourcepawn -I$(ZLIB) -I$(MINIZIP)
